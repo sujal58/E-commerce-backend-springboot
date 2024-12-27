@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: Ecommerce
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/ecommerce
+    username: root
+    password: admin
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  app:
+    jwtSecret : sujalkxakhabartmro1234567890!@#$%^&*()
+
+
+
