@@ -1,6 +1,7 @@
 package com.sujal.Ecommerce.Config;
 
 import com.sujal.Ecommerce.Service.CustomUserDetailService;
+import com.sujal.Ecommerce.Utils.AuthEntryPointJwt;
 import com.sujal.Ecommerce.Utils.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +31,9 @@ public class SpringSecurity {
     @Autowired
     private AuthTokenFilter authTokenFilter;
 
+    @Autowired
+    private AuthEntryPointJwt authEntryPointJwt;
+
     public SpringSecurity(CustomUserDetailService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
@@ -40,14 +44,16 @@ public class SpringSecurity {
         http
                 .authorizeHttpRequests(request ->
                         request
-                                .requestMatchers("/public/**").permitAll()
-                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
+//                                .requestMatchers("/public/**").permitAll()
+//                                .anyRequest().authenticated()
                         )
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
                 .csrf(Customizer -> Customizer.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling().authenticationEntryPoint(authEntryPointJwt);
         return http.build();
     }
 

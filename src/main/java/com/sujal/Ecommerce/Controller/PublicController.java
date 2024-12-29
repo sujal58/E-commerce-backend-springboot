@@ -1,7 +1,7 @@
 package com.sujal.Ecommerce.Controller;
 
-import com.sujal.Ecommerce.DTO.LoginRequestDto;
-import com.sujal.Ecommerce.DTO.LoginResponseDto;
+import com.sujal.Ecommerce.DTO.Request.LoginRequestDto;
+import com.sujal.Ecommerce.DTO.Response.LoginResponseDto;
 import com.sujal.Ecommerce.Entity.UserEntity;
 import com.sujal.Ecommerce.Service.CustomUserDetailService;
 import com.sujal.Ecommerce.Service.UserService;
@@ -20,7 +20,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("public")
+@RequestMapping("/public")
 public class PublicController {
 
     @Autowired
@@ -39,10 +39,12 @@ public class PublicController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserEntity user) {
+
         UserEntity response;
         try{
              response = userService.createNewUser(user);
         }catch(Exception e){
+            System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
 

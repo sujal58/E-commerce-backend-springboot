@@ -1,4 +1,4 @@
-package com.sujal.Ecommerce.DTO;
+package com.sujal.Ecommerce.DTO.Request;
 
 public class LoginRequestDto {
 

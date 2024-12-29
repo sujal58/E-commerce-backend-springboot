@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HomeController {
 
-    @GetMapping("/")
+    @GetMapping("/health-check")
     public String home(){
         return "Hello from Spring boot server!!!";
     }

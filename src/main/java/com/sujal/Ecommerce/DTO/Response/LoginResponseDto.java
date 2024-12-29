@@ -1,4 +1,4 @@
-package com.sujal.Ecommerce.DTO;
+package com.sujal.Ecommerce.DTO.Response;
 
 import java.util.List;
 
