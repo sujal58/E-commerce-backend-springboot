@@ -14,7 +14,7 @@ public class CreateProductDto {
     private Double price;
 
     @NotNull(message = "Product discount percentage cannot be null")
-    private float discount_percentage;
+    private Float discount_percentage;
 
     @NotNull(message = "Product category cannot be null")
     private String category;
@@ -45,11 +45,11 @@ public class CreateProductDto {
     }
 
     @NotNull(message = "Product discount percentage cannot be null")
-    public float getDiscount_percentage() {
+    public Float getDiscount_percentage() {
         return discount_percentage;
     }
 
-    public void setDiscount_percentage(@NotNull(message = "Product discount percentage cannot be null") float discount_percentage) {
+    public void setDiscount_percentage(@NotNull(message = "Product discount percentage cannot be null") Float discount_percentage) {
         this.discount_percentage = discount_percentage;
     }
 

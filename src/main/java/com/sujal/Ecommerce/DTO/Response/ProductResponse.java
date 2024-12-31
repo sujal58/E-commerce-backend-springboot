@@ -1,45 +1,25 @@
-package com.sujal.Ecommerce.Entity;
+package com.sujal.Ecommerce.DTO.Response;
 
+public class ProductResponse {
 
-import jakarta.persistence.*;
-
-
-@Entity
-@Table(name = "Product")
-public class ProductEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id")
     private Long pid;
 
-    @Column(nullable = false, name = "product_name")
     private String pname;
 
-    @Column(nullable = false)
     private String product_description;
 
-    @Column(nullable = false)
     private Double price;
 
-    @Column(nullable = false)
     private Float discount_percentage;
 
-    @Column(nullable = false)
     private Double net_price;
 
-    @Column(nullable = false)
     private String category;
 
-//
-//    @Column(nullable = false)
-//    private String product_img;
+    public ProductResponse(){}
 
-
-    public ProductEntity() {
-    }
-
-    public ProductEntity(String pname, String product_description, Double price, Float discount_percentage, Double net_price, String category) {
+    public ProductResponse(Long pid, String pname, String product_description, Double price, Float discount_percentage, Double net_price, String category) {
+        this.pid = pid;
         this.pname = pname;
         this.product_description = product_description;
         this.price = price;
