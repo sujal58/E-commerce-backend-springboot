@@ -1,6 +1,7 @@
 package com.sujal.Ecommerce.DTO.Response;
 
-public class ProductResponse {
+
+public class ProductResponseDto {
 
     private Long pid;
 
@@ -16,17 +17,8 @@ public class ProductResponse {
 
     private String category;
 
-    public ProductResponse(){}
+    public ProductResponseDto(){}
 
-    public ProductResponse(Long pid, String pname, String product_description, Double price, Float discount_percentage, Double net_price, String category) {
-        this.pid = pid;
-        this.pname = pname;
-        this.product_description = product_description;
-        this.price = price;
-        this.discount_percentage = discount_percentage;
-        this.net_price = net_price;
-        this.category = category;
-    }
 
     public Long getPid() {
         return pid;

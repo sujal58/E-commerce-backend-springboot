@@ -3,10 +3,13 @@ package com.sujal.Ecommerce.Service;
 
 import com.sujal.Ecommerce.DTO.Request.CreateProductDto;
 import com.sujal.Ecommerce.DTO.Request.UpdateProductDto;
-import com.sujal.Ecommerce.DTO.Response.ProductResponse;
+import com.sujal.Ecommerce.DTO.Response.ProductResponseDto;
+import com.sujal.Ecommerce.Entity.CategoryEntity;
 import com.sujal.Ecommerce.Entity.ProductEntity;
+import com.sujal.Ecommerce.Entity.UserEntity;
 import com.sujal.Ecommerce.Exceptions.ResourceNotFoundExcption;
 import com.sujal.Ecommerce.Repository.ProductRepository;
+import com.sujal.Ecommerce.Utils.HandleCategory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,21 +32,76 @@ public class ProductService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private UserService userService;
 
-    public List<ProductResponse> getAllProduct(){
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private HandleCategory handleCategory;
+
+
+    public List<ProductResponseDto> getAllProduct(){
+
+        //fetching all products in db
         List<ProductEntity> fetchedProduct = productRepository.findAll();
-        List<ProductResponse> productResponse = new ArrayList<>(fetchedProduct.stream()
-                .map(product -> modelMapper.map(product, ProductResponse.class)).toList());
+
+        //declaring list for storing all response
+        List<ProductResponseDto> productResponse = new ArrayList<>();
+
+        //loop for mapping productEntity into productResponse and setting category name
+        for(ProductEntity product : fetchedProduct){
+            ProductResponseDto response = modelMapper.map(product, ProductResponseDto.class);
+
+            if(response.getCategory() != null){
+                response.setCategory(product.getCategory().getName());
+            }
+
+            productResponse.add(response);
+        }
+
+
         return productResponse;
     }
 
-    public ProductEntity createNewProduct(CreateProductDto product){
+    public ProductResponseDto createNewProduct(CreateProductDto product){
 
+        //checking whether this category already exist or not
+        CategoryEntity category = handleCategory.checkExistingCategory(product.getCategory());
+
+        //calculate the net price from provided prica and discount percentage
         Double discountPrice = (product.getDiscount_percentage()/100)* product.getPrice();
         Double discountedPrice = product.getPrice() - discountPrice;
-        ProductEntity newProduct = new ProductEntity(product.getPname(), product.getProduct_description(),product.getPrice(),product.getDiscount_percentage(), discountedPrice, product.getCategory());
-        return productRepository.save(newProduct);
 
+        //creating product Entity object
+        ProductEntity newProduct = new ProductEntity(
+                product.getPname(),
+                product.getProduct_description(),
+                product.getPrice(),
+                product.getDiscount_percentage(),
+                discountedPrice,
+                category);
+
+        //fetching user details from the db to add the product
+        UserEntity userDetail = userService.getUserFromUsername("sujal").orElseThrow(()->new RuntimeException("User credintial in invalid"));
+
+        //setting user for new products
+        newProduct.setUser(userDetail);
+
+        //adding products in users product list
+        userDetail.getProducts().add(newProduct);
+
+        //save new product and catch the response
+        ProductEntity savedProduct = productRepository.save(newProduct);
+
+        //save the user with new product to the db
+         userService.saveExistingUser(userDetail);
+
+         //mapping productEntity into productResponseDto
+         ProductResponseDto mappedResponse = modelMapper.map(savedProduct,ProductResponseDto.class);
+          mappedResponse.setCategory(savedProduct.getCategory().getName());
+          return mappedResponse;
     }
 
     public Page<ProductEntity> findFilteredProduct(String category, Pageable paging){
@@ -51,7 +109,7 @@ public class ProductService {
         return productRepository.findByCategoryContaining(category, paging);
     }
 
-    public ProductResponse findById(Long id){
+    public ProductResponseDto findById(Long id){
 
         Optional<ProductEntity> existingEntry =  productRepository.findById(id);
         if(existingEntry.isEmpty()){
@@ -59,7 +117,7 @@ public class ProductService {
         }
         ProductEntity existingProduct = existingEntry.get();
 
-        return modelMapper.map(existingProduct, ProductResponse.class);
+        return modelMapper.map(existingProduct, ProductResponseDto.class);
 
     }
 
@@ -84,8 +142,9 @@ public class ProductService {
                 product.getDiscount_percentage() != null ? product.getDiscount_percentage() : existingProduct.get().getDiscount_percentage(),
                  netPrice,
                 product.getCategory() != null ? product.getCategory() : existingProduct.get().getCategory()
-        );
 
+
+        );
          updatedProduct.setPid(id);
          return productRepository.save(updatedProduct);
 

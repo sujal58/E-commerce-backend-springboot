@@ -1,6 +1,7 @@
 package com.sujal.Ecommerce.Entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 
@@ -28,8 +29,15 @@ public class ProductEntity {
     @Column(nullable = false)
     private Double net_price;
 
-    @Column(nullable = false)
-    private String category;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    private UserEntity user;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    @JsonBackReference
+    private CategoryEntity category;
 
 //
 //    @Column(nullable = false)
@@ -39,13 +47,29 @@ public class ProductEntity {
     public ProductEntity() {
     }
 
-    public ProductEntity(String pname, String product_description, Double price, Float discount_percentage, Double net_price, String category) {
+    public ProductEntity(String pname, String product_description, Double price, Float discount_percentage, Double net_price, CategoryEntity category) {
         this.pname = pname;
         this.product_description = product_description;
         this.price = price;
         this.discount_percentage = discount_percentage;
         this.net_price = net_price;
         this.category = category;
+    }
+
+    public CategoryEntity getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryEntity category) {
+        this.category = category;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     public Long getPid() {
@@ -96,11 +120,11 @@ public class ProductEntity {
         this.net_price = net_price;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
+//    public String getCategory() {
+//        return category;
+//    }
+//
+//    public void setCategory(String category) {
+//        this.category = category;
+//    }
 }

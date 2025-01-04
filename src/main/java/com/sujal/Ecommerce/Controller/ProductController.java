@@ -2,7 +2,7 @@ package com.sujal.Ecommerce.Controller;
 
 import com.sujal.Ecommerce.DTO.Request.CreateProductDto;
 import com.sujal.Ecommerce.DTO.Request.UpdateProductDto;
-import com.sujal.Ecommerce.DTO.Response.ProductResponse;
+import com.sujal.Ecommerce.DTO.Response.ProductResponseDto;
 import com.sujal.Ecommerce.Entity.ProductEntity;
 import com.sujal.Ecommerce.Service.ProductService;
 import jakarta.validation.Valid;
@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -28,7 +27,7 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<?> getAllProduct(){
         try{
-            List<ProductResponse> products = productService.getAllProduct();
+            List<ProductResponseDto> products = productService.getAllProduct();
             return ResponseEntity.ok().body(products);
         }catch (Exception e){
             return ResponseEntity.internalServerError().body(e.getMessage());
@@ -39,7 +38,8 @@ public class ProductController {
     @PostMapping("/create")
     public ResponseEntity<?> createNewProduct(@Valid @RequestBody CreateProductDto product){
         try{
-              ProductEntity createdProduct = productService.createNewProduct(product);
+
+            ProductResponseDto createdProduct = productService.createNewProduct(product);
                return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
 //
         }catch (Exception e){
