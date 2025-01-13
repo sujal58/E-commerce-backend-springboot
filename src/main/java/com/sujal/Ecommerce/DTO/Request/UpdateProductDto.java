@@ -1,6 +1,6 @@
 package com.sujal.Ecommerce.DTO.Request;
 
-import com.sujal.Ecommerce.Entity.CategoryEntity;
+import com.sujal.Ecommerce.Entity.Category;
 
 public class UpdateProductDto {
 
@@ -16,10 +16,10 @@ public class UpdateProductDto {
     private Float discount_percentage;
 
 
-    private CategoryEntity category;
+    private Category category;
 
 
-    public UpdateProductDto(String pname, String product_description, Double price, Float discount_percentage, CategoryEntity category) {
+    public UpdateProductDto(String pname, String product_description, Double price, Float discount_percentage, Category category) {
         this.pname = pname;
         this.product_description = product_description;
         this.price = price;
@@ -59,11 +59,11 @@ public class UpdateProductDto {
         this.discount_percentage = discount_percentage;
     }
 
-    public CategoryEntity getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(CategoryEntity category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 }

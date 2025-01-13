@@ -1,10 +1,9 @@
 package com.sujal.Ecommerce.Controller;
 
-import com.sujal.Ecommerce.DTO.Response.UserResponse;
-import com.sujal.Ecommerce.Entity.UserEntity;
 import com.sujal.Ecommerce.Service.ProductService;
 import com.sujal.Ecommerce.Service.UserService;
-import org.apache.coyote.Response;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/admin")
+@Tag(name = "Admin API")
 public class AdminController {
 
     @Autowired

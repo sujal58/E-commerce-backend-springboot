@@ -2,14 +2,13 @@ package com.sujal.Ecommerce.Entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
 @Table(name = "category")
-public class CategoryEntity {
+public class Category {
 
     @Column(name = "category_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +20,7 @@ public class CategoryEntity {
 
     @OneToMany(mappedBy = "category" ,cascade = CascadeType.ALL)
     @JsonBackReference
-    private List<ProductEntity> product;
+    private List<Product> product;
 
 
 
@@ -42,11 +41,11 @@ public class CategoryEntity {
         this.name = name;
     }
 
-    public List<ProductEntity> getProduct() {
+    public List<Product> getProduct() {
         return product;
     }
 
-    public void setProduct(List<ProductEntity> product) {
+    public void setProduct(List<Product> product) {
         this.product = product;
     }
 }

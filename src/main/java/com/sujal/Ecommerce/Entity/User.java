@@ -2,15 +2,15 @@ package com.sujal.Ecommerce.Entity;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.sujal.Ecommerce.Enums.Role;
 import jakarta.persistence.*;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "user")
-public class UserEntity {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,17 +28,29 @@ public class UserEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private List<String> role;
+    @ElementCollection(targetClass = Role.class)
+    private List<Role> role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<ProductEntity> products = new ArrayList<>();
+    private List<Product> products = new ArrayList<>();
 
-    public List<ProductEntity> getProducts() {
+    @OneToOne(mappedBy = "user")
+    private Cart cart;
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
+    public List<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<ProductEntity> products) {
+    public void setProducts(List<Product> products) {
         this.products = products;
     }
 
@@ -75,11 +87,11 @@ public class UserEntity {
         this.password = password;
     }
 
-    public List<String> getRole() {
+    public List<Role> getRole() {
         return role;
     }
 
-    public void setRole(List<String> role) {
+    public void setRole(List<Role> role) {
         this.role = role;
     }
 }

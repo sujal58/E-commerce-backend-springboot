@@ -1,6 +1,7 @@
 package com.sujal.Ecommerce.Service;
 
-import com.sujal.Ecommerce.Entity.CategoryEntity;
+import com.sujal.Ecommerce.Entity.Category;
+import com.sujal.Ecommerce.Exceptions.ResouceNotFound;
 import com.sujal.Ecommerce.Repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,17 +17,20 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public CategoryEntity saveCategory(CategoryEntity category){
+    public Category saveCategory(Category category){
         return categoryRepository.save(category);
     }
 
-    public List<CategoryEntity> getAllCategory(){
+    public List<Category> getAllCategory(){
         return categoryRepository.findAll();
 
     }
 
-    public CategoryEntity findByCategoryName(String categoryName){
-        Optional<CategoryEntity> category = categoryRepository.findByname(categoryName);
-        return category.orElse(null);
+    public Category findByCategoryName(String categoryName){
+        Category category = categoryRepository.findByname(categoryName).orElse(null);
+         if(category == null){
+             throw new ResouceNotFound("Category");
+         }
+         return category;
     }
 }

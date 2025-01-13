@@ -1,31 +1,43 @@
 package com.sujal.Ecommerce.DTO.Response;
 
-import com.sujal.Ecommerce.Entity.ProductEntity;
+import com.sujal.Ecommerce.Entity.Product;
+import com.sujal.Ecommerce.Enums.Role;
 
 import java.util.List;
 
 public class UserResponse {
+    private Long id;
     private String username;
     private String email;
-    private List<String> role;
-    private List<ProductEntity> products;
+    private List<Role> role;
+//    private List<Product> products;
 
     public UserResponse() {
     }
 
-    public UserResponse(String username, String email, List<String> role) {
+    public UserResponse(Long id, String username, String email, List<Role> role) {
+        this.id = id;
         this.username = username;
         this.email = email;
         this.role = role;
     }
 
-    public List<ProductEntity> getProducts() {
-        return products;
+    public Long getId() {
+        return id;
     }
 
-    public void setProducts(List<ProductEntity> products) {
-        this.products = products;
+    public void setId(Long id) {
+        this.id = id;
     }
+
+
+    //    public List<Product> getProducts() {
+//        return products;
+//    }
+//
+//    public void setProducts(List<Product> products) {
+//        this.products = products;
+//    }
 
     public String getUsername() {
         return username;
@@ -44,11 +56,11 @@ public class UserResponse {
         this.email = email;
     }
 
-    public List<String> getRole() {
+    public List<Role> getRole() {
         return role;
     }
 
-    public void setRole(List<String> role) {
+    public void setRole(List<Role> role) {
         this.role = role;
     }
 }

@@ -4,10 +4,10 @@ package com.sujal.Ecommerce.Service;
 import com.sujal.Ecommerce.DTO.Request.CreateProductDto;
 import com.sujal.Ecommerce.DTO.Request.UpdateProductDto;
 import com.sujal.Ecommerce.DTO.Response.ProductResponseDto;
-import com.sujal.Ecommerce.Entity.CategoryEntity;
-import com.sujal.Ecommerce.Entity.ProductEntity;
-import com.sujal.Ecommerce.Entity.UserEntity;
-import com.sujal.Ecommerce.Exceptions.ResourceNotFoundExcption;
+import com.sujal.Ecommerce.Entity.Category;
+import com.sujal.Ecommerce.Entity.Product;
+import com.sujal.Ecommerce.Entity.User;
+import com.sujal.Ecommerce.Exceptions.ProductNotFoundException;
 import com.sujal.Ecommerce.Repository.ProductRepository;
 import com.sujal.Ecommerce.Utils.HandleCategory;
 import org.modelmapper.ModelMapper;
@@ -42,16 +42,17 @@ public class ProductService {
     private HandleCategory handleCategory;
 
 
+
     public List<ProductResponseDto> getAllProduct(){
 
         //fetching all products in db
-        List<ProductEntity> fetchedProduct = productRepository.findAll();
+        List<Product> fetchedProduct = productRepository.findAll();
 
         //declaring list for storing all response
         List<ProductResponseDto> productResponse = new ArrayList<>();
 
         //loop for mapping productEntity into productResponse and setting category name
-        for(ProductEntity product : fetchedProduct){
+        for(Product product : fetchedProduct){
             ProductResponseDto response = modelMapper.map(product, ProductResponseDto.class);
 
             if(response.getCategory() != null){
@@ -68,14 +69,14 @@ public class ProductService {
     public ProductResponseDto createNewProduct(CreateProductDto product){
 
         //checking whether this category already exist or not
-        CategoryEntity category = handleCategory.checkExistingCategory(product.getCategory());
+        Category category = handleCategory.checkExistingCategory(product.getCategory());
 
         //calculate the net price from provided prica and discount percentage
         Double discountPrice = (product.getDiscount_percentage()/100)* product.getPrice();
         Double discountedPrice = product.getPrice() - discountPrice;
 
         //creating product Entity object
-        ProductEntity newProduct = new ProductEntity(
+        Product newProduct = new Product(
                 product.getPname(),
                 product.getProduct_description(),
                 product.getPrice(),
@@ -84,7 +85,7 @@ public class ProductService {
                 category);
 
         //fetching user details from the db to add the product
-        UserEntity userDetail = userService.getUserFromUsername("sujal").orElseThrow(()->new RuntimeException("User credintial in invalid"));
+        User userDetail = userService.getUserFromUsername("sujal").orElseThrow(()->new RuntimeException("User credintial in invalid"));
 
         //setting user for new products
         newProduct.setUser(userDetail);
@@ -93,7 +94,7 @@ public class ProductService {
         userDetail.getProducts().add(newProduct);
 
         //save new product and catch the response
-        ProductEntity savedProduct = productRepository.save(newProduct);
+        Product savedProduct = productRepository.save(newProduct);
 
         //save the user with new product to the db
          userService.saveExistingUser(userDetail);
@@ -104,38 +105,47 @@ public class ProductService {
           return mappedResponse;
     }
 
-    public Page<ProductEntity> findFilteredProduct(String category, Pageable paging){
+    public Page<Product> findFilteredProduct(String category, Pageable paging){
 
         return productRepository.findByCategoryContaining(category, paging);
     }
 
     public ProductResponseDto findById(Long id){
 
-        Optional<ProductEntity> existingEntry =  productRepository.findById(id);
+        Optional<Product> existingEntry =  productRepository.findById(id);
         if(existingEntry.isEmpty()){
-            throw new ResourceNotFoundExcption("Product", id);
+            throw new ProductNotFoundException(id);
         }
-        ProductEntity existingProduct = existingEntry.get();
+        Product existingProduct = existingEntry.get();
 
         return modelMapper.map(existingProduct, ProductResponseDto.class);
 
     }
 
+    public Product findProductById(Long id){
+
+        Optional<Product> existingEntry =  productRepository.findById(id);
+        if(existingEntry.isEmpty()){
+            throw new ProductNotFoundException(id);
+        }
+        return existingEntry.get();
+    }
+
     public boolean deleteProductByid(Long id){
-        Optional<ProductEntity> existingProduct = productRepository.findById(id);
+        Optional<Product> existingProduct = productRepository.findById(id);
         if(existingProduct.isEmpty()){
-            throw new ResourceNotFoundExcption("Product", id);
+            throw new ProductNotFoundException(id);
         }
         productRepository.deleteById(id);
         return true;
     }
 
-    public ProductEntity updateProductById(UpdateProductDto product, Long id){
-        Optional<ProductEntity> existingProduct = productRepository.findById(id);
+    public Product updateProductById(UpdateProductDto product, Long id){
+        Optional<Product> existingProduct = productRepository.findById(id);
 
         Double netPrice = getNetPrice(product, id, existingProduct);
 
-        ProductEntity updatedProduct = new ProductEntity(
+        Product updatedProduct = new Product(
                 product.getPname() != null ? product.getPname() : existingProduct.get().getPname(),
                 product.getProduct_description() != null ? product.getProduct_description() : existingProduct.get().getProduct_description(),
                 product.getPrice() != null ? product.getPrice() : existingProduct.get().getPrice(),
@@ -150,13 +160,13 @@ public class ProductService {
 
     }
 
-    private static Double getNetPrice(UpdateProductDto product, Long id, Optional<ProductEntity> existingProduct) {
+    private static Double getNetPrice(UpdateProductDto product, Long id, Optional<Product> existingProduct) {
         if(existingProduct.isEmpty()){
-            throw new ResourceNotFoundExcption("Product", id);
+            throw new ProductNotFoundException(id);
         }
 
         // Get the existing product entity
-        ProductEntity productEntity = existingProduct.get();
+        Product productEntity = existingProduct.get();
 
         Float updatedPercentage = product.getDiscount_percentage() != null ? product.getDiscount_percentage() : productEntity.getDiscount_percentage();
         Double updatedPrice = product.getPrice() != null ? product.getPrice() : productEntity.getPrice();

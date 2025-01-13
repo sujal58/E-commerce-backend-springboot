@@ -3,8 +3,11 @@ package com.sujal.Ecommerce.Controller;
 import com.sujal.Ecommerce.DTO.Request.CreateProductDto;
 import com.sujal.Ecommerce.DTO.Request.UpdateProductDto;
 import com.sujal.Ecommerce.DTO.Response.ProductResponseDto;
-import com.sujal.Ecommerce.Entity.ProductEntity;
+import com.sujal.Ecommerce.Entity.Product;
+import com.sujal.Ecommerce.Exceptions.ProductNotFoundException;
 import com.sujal.Ecommerce.Service.ProductService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
+@Tag(name = "Product API", description = "Product related endpoints.")
 public class ProductController {
 
     @Autowired
@@ -33,6 +37,13 @@ public class ProductController {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
 
+    }
+
+
+
+    @GetMapping("/{pid}")
+    public ResponseEntity<?> getProductById(@PathVariable Long pid){
+        throw new ProductNotFoundException(pid);
     }
 
     @PostMapping("/create")
@@ -53,7 +64,7 @@ public class ProductController {
     ){
         try{
             Pageable paging = PageRequest.of(0, 2);
-            Page<ProductEntity> productPage;
+            Page<Product> productPage;
 
             if(category.isEmpty()){
                 return ResponseEntity.ok(productService.getAllProduct());
@@ -86,7 +97,7 @@ public class ProductController {
     public ResponseEntity<?> updateProductById(@Valid @RequestBody UpdateProductDto product, @PathVariable Long pid){
 
         try{
-            ProductEntity updatedProduct = productService.updateProductById(product, pid);
+            Product updatedProduct = productService.updateProductById(product, pid);
             return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
         }catch (Exception e){
             if(e.getMessage().equals("Product doesnot Exist")){

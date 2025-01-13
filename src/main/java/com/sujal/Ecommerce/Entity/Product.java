@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Product")
-public class ProductEntity {
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,22 +32,22 @@ public class ProductEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonBackReference
-    private UserEntity user;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     @JsonBackReference
-    private CategoryEntity category;
+    private Category category;
 
 //
 //    @Column(nullable = false)
 //    private String product_img;
 
 
-    public ProductEntity() {
+    public Product() {
     }
 
-    public ProductEntity(String pname, String product_description, Double price, Float discount_percentage, Double net_price, CategoryEntity category) {
+    public Product(String pname, String product_description, Double price, Float discount_percentage, Double net_price, Category category) {
         this.pname = pname;
         this.product_description = product_description;
         this.price = price;
@@ -56,19 +56,19 @@ public class ProductEntity {
         this.category = category;
     }
 
-    public CategoryEntity getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(CategoryEntity category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
-    public UserEntity getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(UserEntity user) {
+    public void setUser(User user) {
         this.user = user;
     }
 

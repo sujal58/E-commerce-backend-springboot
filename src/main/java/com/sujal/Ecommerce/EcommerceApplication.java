@@ -17,14 +17,6 @@ public class EcommerceApplication {
 		SpringApplication.run(EcommerceApplication.class, args);
 	}
 
-	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception{
-		return builder.getAuthenticationManager();
-	}
 
-	@Bean
-	public ModelMapper modelMapper(){
-		return new ModelMapper();
-	}
 
 }

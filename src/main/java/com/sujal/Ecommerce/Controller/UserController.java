@@ -3,10 +3,11 @@ package com.sujal.Ecommerce.Controller;
 import com.sujal.Ecommerce.DTO.Request.LoginRequestDto;
 import com.sujal.Ecommerce.DTO.Request.RegisterUserDto;
 import com.sujal.Ecommerce.DTO.Response.LoginResponseDto;
-import com.sujal.Ecommerce.Entity.UserEntity;
+import com.sujal.Ecommerce.Entity.User;
 import com.sujal.Ecommerce.Service.CustomUserDetailService;
 import com.sujal.Ecommerce.Service.UserService;
 import com.sujal.Ecommerce.Utils.JwtUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
+@Tag(name = "User/initial API")
 public class UserController {
 
     @Autowired
@@ -37,12 +39,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
-
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid  @RequestBody RegisterUserDto user) {
 
-        UserEntity response;
+        User response;
         try{
              response = userService.createNewUser(user);
         }catch(Exception e){
@@ -51,6 +51,7 @@ public class UserController {
 
         return ResponseEntity.ok(response);
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto loginDto){

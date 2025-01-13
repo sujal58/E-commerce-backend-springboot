@@ -1,14 +1,13 @@
 package com.sujal.Ecommerce.Repository;
 
-import com.sujal.Ecommerce.Entity.Category;
+import com.sujal.Ecommerce.Entity.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-
 @Component
-public interface CategoryRepository extends JpaRepository<Category, Long> {
+public interface CartRepository extends JpaRepository<Cart, Long> {
 
-    Optional<Category> findByname(String category);
+    Cart findByUser_Id(Long id);
 }
