@@ -7,15 +7,17 @@ public class ProductResponseDto {
 
     private String pname;
 
-    private String product_description;
+    private String description;
 
     private Double price;
 
-    private Float discount_percentage;
+    private Float discount;
 
-    private Double net_price;
+    private Double netPrice;
 
     private String category;
+
+    private String image;
 
     public ProductResponseDto(){}
 
@@ -36,12 +38,12 @@ public class ProductResponseDto {
         this.pname = pname;
     }
 
-    public String getProduct_description() {
-        return product_description;
+    public String getDescription() {
+        return description;
     }
 
-    public void setProduct_description(String product_description) {
-        this.product_description = product_description;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Double getPrice() {
@@ -52,20 +54,20 @@ public class ProductResponseDto {
         this.price = price;
     }
 
-    public Float getDiscount_percentage() {
-        return discount_percentage;
+    public Float getDiscount() {
+        return discount;
     }
 
-    public void setDiscount_percentage(Float discount_percentage) {
-        this.discount_percentage = discount_percentage;
+    public void setDiscount(Float discount) {
+        this.discount = discount;
     }
 
-    public Double getNet_price() {
-        return net_price;
+    public Double getNetPrice() {
+        return netPrice;
     }
 
-    public void setNet_price(Double net_price) {
-        this.net_price = net_price;
+    public void setNetPrice(Double netPrice) {
+        this.netPrice = netPrice;
     }
 
     public String getCategory() {
@@ -74,5 +76,13 @@ public class ProductResponseDto {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

@@ -10,14 +10,16 @@ import com.sujal.Ecommerce.Entity.User;
 import com.sujal.Ecommerce.Exceptions.ProductNotFoundException;
 import com.sujal.Ecommerce.Repository.ProductRepository;
 import com.sujal.Ecommerce.Utils.HandleCategory;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +42,12 @@ public class ProductService {
 
     @Autowired
     private HandleCategory handleCategory;
+
+    @Autowired
+    private FileService fileService;
+
+    @Value("${project.image}")
+    private String path;
 
 
 
@@ -66,26 +74,31 @@ public class ProductService {
         return productResponse;
     }
 
-    public ProductResponseDto createNewProduct(CreateProductDto product){
+    @Transactional
+    public ProductResponseDto createNewProduct(CreateProductDto product) throws IOException {
+
+        //fetching user details from the db to add the product
+        User userDetail = userService.getUserFromUsername("sujal").orElseThrow(()->new RuntimeException("User credintial in invalid"));
 
         //checking whether this category already exist or not
         Category category = handleCategory.checkExistingCategory(product.getCategory());
 
         //calculate the net price from provided prica and discount percentage
-        Double discountPrice = (product.getDiscount_percentage()/100)* product.getPrice();
+        Double discountPrice = (product.getDiscount()/100)* product.getPrice();
         Double discountedPrice = product.getPrice() - discountPrice;
+
+        //saving image of product
+        String imageUrl = fileService.uploadImage(path, product.getImage());
 
         //creating product Entity object
         Product newProduct = new Product(
                 product.getPname(),
-                product.getProduct_description(),
+                product.getDescription(),
                 product.getPrice(),
-                product.getDiscount_percentage(),
+                product.getDiscount(),
                 discountedPrice,
-                category);
-
-        //fetching user details from the db to add the product
-        User userDetail = userService.getUserFromUsername("sujal").orElseThrow(()->new RuntimeException("User credintial in invalid"));
+                category,
+                imageUrl);
 
         //setting user for new products
         newProduct.setUser(userDetail);
@@ -131,28 +144,54 @@ public class ProductService {
         return existingEntry.get();
     }
 
-    public boolean deleteProductByid(Long id){
-        Optional<Product> existingProduct = productRepository.findById(id);
-        if(existingProduct.isEmpty()){
-            throw new ProductNotFoundException(id);
-        }
+    @Transactional
+    public boolean deleteProductByid(Long id) throws InterruptedException {
+        Product existingProduct = productRepository.findById(id).orElseThrow(()-> new ProductNotFoundException(id));
+
+        //deleting the data in db
         productRepository.deleteById(id);
+
+        //delete image before deleting the product
+        fileService.deleteImage(path, existingProduct.getImage());
         return true;
     }
 
-    public Product updateProductById(UpdateProductDto product, Long id){
-        Optional<Product> existingProduct = productRepository.findById(id);
+    @Transactional
+    public Product updateProductById(UpdateProductDto product, Long id) throws IOException {
+        Product existingProduct = productRepository.findById(id).orElseThrow(()-> new ProductNotFoundException(id));
 
+        //calculating net price after applying discount on price
         Double netPrice = getNetPrice(product, id, existingProduct);
 
-        Product updatedProduct = new Product(
-                product.getPname() != null ? product.getPname() : existingProduct.get().getPname(),
-                product.getProduct_description() != null ? product.getProduct_description() : existingProduct.get().getProduct_description(),
-                product.getPrice() != null ? product.getPrice() : existingProduct.get().getPrice(),
-                product.getDiscount_percentage() != null ? product.getDiscount_percentage() : existingProduct.get().getDiscount_percentage(),
-                 netPrice,
-                product.getCategory() != null ? product.getCategory() : existingProduct.get().getCategory()
+        //if category is updated
+        Category category = null;
+        if(product.getCategory() != null){
+            //checking whether this category already exist or not
+             category = handleCategory.checkExistingCategory(product.getCategory());
+        }else{
+            //if category is not changed assign the previous category
+            category = existingProduct.getCategory();
+        }
 
+
+        //checking whether the image is changed or not while updating
+        //if changed then delete the existing one and upload new
+        String updatedImageName = null;
+        if(product.getImage() != null){
+            fileService.deleteImage(path, existingProduct.getImage());
+            updatedImageName = fileService.uploadImage(path, product.getImage());
+
+        }
+
+
+        Product updatedProduct = new Product(
+                product.getPname() != null ? product.getPname() : existingProduct.getPname(),
+                product.getDescription() != null ? product.getDescription() : existingProduct.getDescription(),
+                product.getPrice() != null ? product.getPrice() : existingProduct.getPrice(),
+                product.getDiscount() != null ? product.getDiscount() : existingProduct.getDiscount(),
+                 netPrice,
+                category,
+                product.getImage() != null ? updatedImageName : existingProduct.getImage()
 
         );
          updatedProduct.setPid(id);
@@ -160,17 +199,12 @@ public class ProductService {
 
     }
 
-    private static Double getNetPrice(UpdateProductDto product, Long id, Optional<Product> existingProduct) {
-        if(existingProduct.isEmpty()){
-            throw new ProductNotFoundException(id);
-        }
+    private static Double getNetPrice(UpdateProductDto product, Long id, Product existingProduct) {
 
-        // Get the existing product entity
-        Product productEntity = existingProduct.get();
-
-        Float updatedPercentage = product.getDiscount_percentage() != null ? product.getDiscount_percentage() : productEntity.getDiscount_percentage();
-        Double updatedPrice = product.getPrice() != null ? product.getPrice() : productEntity.getPrice();
+        Float updatedPercentage = product.getDiscount() != null ? product.getDiscount() : existingProduct.getDiscount();
+        Double updatedPrice = product.getPrice() != null ? product.getPrice() : existingProduct.getPrice();
 
         return updatedPrice -  (updatedPercentage / 100) * updatedPrice;
     }
 }
+

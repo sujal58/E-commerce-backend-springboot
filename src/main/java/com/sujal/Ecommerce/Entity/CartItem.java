@@ -2,6 +2,7 @@ package com.sujal.Ecommerce.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 
 @Entity
 public class CartItem {
@@ -21,9 +22,11 @@ public class CartItem {
 
 
     @Column(nullable = false)
+    @Min(0)
     private Double price;
 
     @Column(nullable = false)
+    @Min(0)
     private int quantity;
 
 

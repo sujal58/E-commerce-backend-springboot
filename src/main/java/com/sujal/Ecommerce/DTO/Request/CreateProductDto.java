@@ -1,5 +1,6 @@
 package com.sujal.Ecommerce.DTO.Request;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
 
 
 public class CreateProductDto {
@@ -8,17 +9,28 @@ public class CreateProductDto {
     private String pname;
 
     @NotNull(message = "Product Description cannot be null")
-    private String product_description;
+    private String description;
 
     @NotNull(message = "Product price cannot be null")
     private Double price;
 
     @NotNull(message = "Product discount percentage cannot be null")
-    private Float discount_percentage;
+    private Float discount;
 
     @NotNull(message = "Product category cannot be null")
     private String category;
 
+    @NotNull(message = "Image cannot be null")
+    private MultipartFile image;
+
+    public CreateProductDto(String pname, String description, Double price, Float discount, String category, MultipartFile image) {
+        this.pname = pname;
+        this.description = description;
+        this.price = price;
+        this.discount = discount;
+        this.category = category;
+        this.image = image;
+    }
 
     public @NotNull(message = "Product name cannot be null") String getPname() {
         return pname;
@@ -28,12 +40,12 @@ public class CreateProductDto {
         this.pname = pname;
     }
 
-    public @NotNull(message = "Product Description cannot be null") String getProduct_description() {
-        return product_description;
+    public @NotNull(message = "Product Description cannot be null") String getDescription() {
+        return description;
     }
 
-    public void setProduct_description(@NotNull(message = "Product Description cannot be null") String product_description) {
-        this.product_description = product_description;
+    public void setDescription(@NotNull(message = "Product Description cannot be null") String description) {
+        this.description = description;
     }
 
     public @NotNull(message = "Product price cannot be null") Double getPrice() {
@@ -45,12 +57,12 @@ public class CreateProductDto {
     }
 
     @NotNull(message = "Product discount percentage cannot be null")
-    public Float getDiscount_percentage() {
-        return discount_percentage;
+    public Float getDiscount() {
+        return discount;
     }
 
-    public void setDiscount_percentage(@NotNull(message = "Product discount percentage cannot be null") Float discount_percentage) {
-        this.discount_percentage = discount_percentage;
+    public void setDiscount(@NotNull(message = "Product discount percentage cannot be null") Float discount) {
+        this.discount = discount;
     }
 
     public @NotNull(message = "Product category cannot be null") String getCategory() {
@@ -59,6 +71,14 @@ public class CreateProductDto {
 
     public void setCategory(@NotNull(message = "Product category cannot be null") String category) {
         this.category = category;
+    }
+
+    public @NotNull(message = "Image cannot be null") MultipartFile getImage() {
+        return image;
+    }
+
+    public void setImage(@NotNull(message = "Image cannot be null") MultipartFile image) {
+        this.image = image;
     }
 }
 

@@ -1,30 +1,35 @@
 package com.sujal.Ecommerce.DTO.Request;
 
 import com.sujal.Ecommerce.Entity.Category;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
 
 public class UpdateProductDto {
 
     private String pname;
 
 
-    private String product_description;
+    private String description;
 
 
     private Double price;
 
 
-    private Float discount_percentage;
+    private Float discount;
 
 
-    private Category category;
+    private String category;
 
 
-    public UpdateProductDto(String pname, String product_description, Double price, Float discount_percentage, Category category) {
+    private MultipartFile image;
+
+    public UpdateProductDto(String pname, String description, Double price, Float discount, String category, MultipartFile image) {
         this.pname = pname;
-        this.product_description = product_description;
+        this.description = description;
         this.price = price;
-        this.discount_percentage = discount_percentage;
+        this.discount = discount;
         this.category = category;
+        this.image = image;
     }
 
     public String getPname() {
@@ -35,12 +40,12 @@ public class UpdateProductDto {
         this.pname = pname;
     }
 
-    public String getProduct_description() {
-        return product_description;
+    public String getDescription() {
+        return description;
     }
 
-    public void setProduct_description(String product_description) {
-        this.product_description = product_description;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Double getPrice() {
@@ -51,19 +56,27 @@ public class UpdateProductDto {
         this.price = price;
     }
 
-    public Float getDiscount_percentage() {
-        return discount_percentage;
+    public Float getDiscount() {
+        return discount;
     }
 
-    public void setDiscount_percentage(Float discount_percentage) {
-        this.discount_percentage = discount_percentage;
+    public void setDiscount(Float discount) {
+        this.discount = discount;
     }
 
-    public Category getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(String category) {
         this.category = category;
+    }
+
+    public MultipartFile getImage() {
+        return image;
+    }
+
+    public void setImage(MultipartFile image) {
+        this.image = image;
     }
 }

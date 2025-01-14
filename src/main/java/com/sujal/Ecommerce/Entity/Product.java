@@ -17,17 +17,20 @@ public class Product {
     @Column(nullable = false, name = "product_name")
     private String pname;
 
-    @Column(nullable = false)
-    private String product_description;
+    @Column(nullable = false, name = "product_description")
+    private String description;
 
     @Column(nullable = false)
     private Double price;
 
-    @Column(nullable = false)
-    private Float discount_percentage;
+    @Column(nullable = false, name = "discount_percentage")
+    private Float discount;
 
-    @Column(nullable = false)
-    private Double net_price;
+    @Column(nullable = false, name = "net_price")
+    private Double netPrice;
+
+    @Column(nullable = false, name = "product_img")
+    private String image;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -39,37 +42,25 @@ public class Product {
     @JsonBackReference
     private Category category;
 
-//
-//    @Column(nullable = false)
-//    private String product_img;
-
 
     public Product() {
     }
 
-    public Product(String pname, String product_description, Double price, Float discount_percentage, Double net_price, Category category) {
+    public Product(String pname,
+                   String description,
+                   Double price,
+                   Float discount,
+                   Double netPrice,
+                   Category category,
+                   String image
+                   ) {
         this.pname = pname;
-        this.product_description = product_description;
+        this.description = description;
         this.price = price;
-        this.discount_percentage = discount_percentage;
-        this.net_price = net_price;
+        this.discount = discount;
+        this.netPrice = netPrice;
+        this.image = image;
         this.category = category;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Long getPid() {
@@ -88,12 +79,12 @@ public class Product {
         this.pname = pname;
     }
 
-    public String getProduct_description() {
-        return product_description;
+    public String getDescription() {
+        return description;
     }
 
-    public void setProduct_description(String product_description) {
-        this.product_description = product_description;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Double getPrice() {
@@ -104,27 +95,43 @@ public class Product {
         this.price = price;
     }
 
-    public Float getDiscount_percentage() {
-        return discount_percentage;
+    public Float getDiscount() {
+        return discount;
     }
 
-    public void setDiscount_percentage(Float discount_percentage) {
-        this.discount_percentage = discount_percentage;
+    public void setDiscount(Float discount) {
+        this.discount = discount;
     }
 
-    public Double getNet_price() {
-        return net_price;
+    public Double getNetPrice() {
+        return netPrice;
     }
 
-    public void setNet_price(Double net_price) {
-        this.net_price = net_price;
+    public void setNetPrice(Double netPrice) {
+        this.netPrice = netPrice;
     }
 
-//    public String getCategory() {
-//        return category;
-//    }
-//
-//    public void setCategory(String category) {
-//        this.category = category;
-//    }
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 }

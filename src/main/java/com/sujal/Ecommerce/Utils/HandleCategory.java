@@ -14,6 +14,7 @@ public class HandleCategory {
     public Category checkExistingCategory(String categoryName){
         //check if the category of this product is already exist or not
         Category category = categoryService.findByCategoryName(categoryName);
+
         Category savedCategory = new Category();
 
         //if category is not available then create new category and save into db

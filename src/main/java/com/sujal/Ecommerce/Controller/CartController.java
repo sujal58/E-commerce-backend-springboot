@@ -3,8 +3,11 @@ package com.sujal.Ecommerce.Controller;
 
 import com.sujal.Ecommerce.Entity.Cart;
 import com.sujal.Ecommerce.Entity.CartItem;
+import com.sujal.Ecommerce.Entity.Product;
+import com.sujal.Ecommerce.Entity.User;
 import com.sujal.Ecommerce.Repository.CartRepository;
 import com.sujal.Ecommerce.Service.CartService;
+import com.sujal.Ecommerce.Service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,9 @@ public class CartController {
 
     @Autowired
     private CartService cartService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/{id}")
     public ResponseEntity<Cart> getCart(
@@ -47,4 +53,11 @@ public class CartController {
         List<CartItem> cartItem = cartService.deleteProductFromCart(userId, productId);
         return ResponseEntity.ok(cartItem);
     }
+
+    @PutMapping("/update/{userId}/{productId}")
+    public ResponseEntity<?> updateQuantity(@PathVariable Long userId, @PathVariable Long productId, @RequestParam int quantity){
+        CartItem item = cartService.updateQuantity(userId, productId, quantity);
+        return new ResponseEntity<>(item, HttpStatus.OK);
+    }
+
 }

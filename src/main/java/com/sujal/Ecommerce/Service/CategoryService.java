@@ -27,10 +27,9 @@ public class CategoryService {
     }
 
     public Category findByCategoryName(String categoryName){
-        Category category = categoryRepository.findByname(categoryName).orElse(null);
-         if(category == null){
-             throw new ResouceNotFound("Category");
-         }
-         return category;
+        return categoryRepository.findByname(categoryName).orElse(null);
+//         if(category == null){
+//             throw new ResouceNotFound("Category");
+//         }
     }
 }
