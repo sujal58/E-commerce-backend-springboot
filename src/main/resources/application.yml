@@ -25,3 +25,13 @@ spring:
 project:
   image: images/
 
+Stripe:
+  publishable:
+    Key: pk_test_51QkR9QLDR9mdaQPwIUJpK3hjrMO6GJ2EQJrfimxraxK6GsKRlzzDqGacSNdHOpmDjaiOZnQfsfC8eeKUcayMdiuK00A9xnMLhr
+
+  secret:
+    Key: sk_test_51QkR9QLDR9mdaQPw1N1tLt3ryubS8JTk7QHGV6DIjz8Fl9lIJvFCHyN3QGMo02JcrNDGRaRUUDXevY4tFo4XXB7U00ZNQ1JK6v
+
+  base:
+    url: http://localhost:8080/payment
+
