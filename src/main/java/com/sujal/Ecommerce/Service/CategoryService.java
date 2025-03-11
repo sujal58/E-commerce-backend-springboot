@@ -23,13 +23,9 @@ public class CategoryService {
 
     public List<Category> getAllCategory(){
         return categoryRepository.findAll();
-
     }
 
-    public Category findByCategoryName(String categoryName){
+    public Category findByCategoryName(String categoryName) {
         return categoryRepository.findByname(categoryName).orElse(null);
-//         if(category == null){
-//             throw new ResouceNotFound("Category");
-//         }
     }
 }

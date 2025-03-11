@@ -1,10 +1,12 @@
 package com.sujal.Ecommerce.DTO.Response;
 
-import jakarta.servlet.http.HttpServlet;
+
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 
+@Data
 public class ApiResponse {
 
     private HttpStatus status;
@@ -38,46 +40,6 @@ public class ApiResponse {
 
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    // Getters and Setters
-    public HttpStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(HttpStatus status) {
-        this.status = status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
 
     // Static helper method for a successful response with data
     public static ApiResponse success(HttpStatus status, String message, Object data) {

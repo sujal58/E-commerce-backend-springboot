@@ -55,7 +55,11 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto loginDto){
-         Authentication auth;
+        System.out.println("login proceeds");
+        System.out.println(loginDto.getUsername());
+        System.out.println(loginDto.getPassword());
+
+        Authentication auth;
         try{
              auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword())

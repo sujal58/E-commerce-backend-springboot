@@ -1,16 +1,20 @@
 package com.sujal.Ecommerce.Utils;
 
 import com.sujal.Ecommerce.Entity.User;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+
+@Transactional
 public class UserDetailsImplementation implements UserDetails {
 
-    private User user;
+    private final User user;
 
     public UserDetailsImplementation(User user){
         this.user = user;

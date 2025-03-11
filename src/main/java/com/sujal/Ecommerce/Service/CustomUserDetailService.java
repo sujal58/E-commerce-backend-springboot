@@ -3,6 +3,7 @@ package com.sujal.Ecommerce.Service;
 import com.sujal.Ecommerce.Entity.User;
 import com.sujal.Ecommerce.Repository.UserRepository;
 import com.sujal.Ecommerce.Utils.UserDetailsImplementation;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,6 +22,7 @@ public class CustomUserDetailService implements UserDetailsService {
     public CustomUserDetailService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
 
 
     @Override

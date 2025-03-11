@@ -28,7 +28,6 @@ public class User {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    @ElementCollection(targetClass = Role.class)
     private List<Role> role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

@@ -1,7 +1,7 @@
 package com.sujal.Ecommerce.Service;
 
 
-import com.sujal.Ecommerce.DTO.Request.CreateProductDto;
+import com.sujal.Ecommerce.DTO.Request.ProductDto;
 import com.sujal.Ecommerce.DTO.Request.UpdateProductDto;
 import com.sujal.Ecommerce.DTO.Response.ProductResponseDto;
 import com.sujal.Ecommerce.Entity.Category;
@@ -18,9 +18,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,7 +77,8 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponseDto createNewProduct(CreateProductDto product) throws IOException {
+    public ProductResponseDto createNewProduct(ProductDto product, MultipartFile file) throws IOException {
+
 
         //fetching user details from the db to add the product
         User userDetail = userService.getUserFromUsername("sujal").orElseThrow(()->new RuntimeException("User credintial in invalid"));
@@ -88,11 +91,13 @@ public class ProductService {
         Double discountedPrice = product.getPrice() - discountPrice;
 
         //saving image of product
-        String imageUrl = fileService.uploadImage(path, product.getImage());
+        String imageUrl = fileService.uploadImage(path, file);
+        String[] data = product.getCategory().split(",");
+        System.out.println(Arrays.toString(data));
 
         //creating product Entity object
         Product newProduct = new Product(
-                product.getPname(),
+                product.getName(),
                 product.getDescription(),
                 product.getPrice(),
                 product.getDiscount(),
