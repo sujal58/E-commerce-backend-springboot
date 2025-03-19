@@ -4,8 +4,8 @@ spring:
 
   datasource:
     url: jdbc:mysql://localhost:3306/ecommerce
-    username: root
-    password: admin
+    username: ${db_username}
+    password: ${db_password}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -15,7 +15,7 @@ spring:
     show-sql: true
 
   app:
-    jwtSecret : sujalkxakhabartmro1234567890!@#$%^&*()
+    jwtSecret : ${jwt_secret}
 
   servlet:
     multipart:
@@ -27,10 +27,10 @@ project:
 
 Stripe:
   publishable:
-    Key: pk_test_51QkR9QLDR9mdaQPwIUJpK3hjrMO6GJ2EQJrfimxraxK6GsKRlzzDqGacSNdHOpmDjaiOZnQfsfC8eeKUcayMdiuK00A9xnMLhr
+    Key: ${stripe_publishable_key}
 
   secret:
-    Key: sk_test_51QkR9QLDR9mdaQPw1N1tLt3ryubS8JTk7QHGV6DIjz8Fl9lIJvFCHyN3QGMo02JcrNDGRaRUUDXevY4tFo4XXB7U00ZNQ1JK6v
+    Key: ${stripe_secret_key}
 
   base:
     url: http://localhost:8080/payment
